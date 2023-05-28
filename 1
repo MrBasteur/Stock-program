@@ -1,0 +1,76 @@
+print("Created by Basteur")
+import json
+
+STOK_DOSYA = "stok.json"
+
+def verileri_yukle():
+    try:
+        with open(STOK_DOSYA, "r") as dosya:
+            return json.load(dosya)
+    except FileNotFoundError:
+        return {}
+
+def verileri_kaydet(veriler):
+    with open(STOK_DOSYA, "w") as dosya:
+        json.dump(veriler, dosya)
+
+def stok_programi():
+    stok = verileri_yukle()
+
+    while True:
+        print("\n--- Stok Programı ---")
+        print("1. Eşya Ekle")
+        print("2. Eşya Çıkar")
+        print("3. Hesap Değiştir")
+        print("4. Stok Durumu Göster")
+        print("5. Çıkış")
+
+        secim = input("Bir seçenek girin (1-5): ")
+
+        if secim == "1":
+            hesap = input("Hesap adı girin: ")
+            esya = input("Eşya adı girin: ")
+
+            if hesap in stok:
+                stok[hesap].append(esya)
+            else:
+                stok[hesap] = [esya]
+
+            print(f"{esya}, {hesap} hesabına eklenmiştir.")
+
+        elif secim == "2":
+            hesap = input("Hesap adı girin: ")
+            esya = input("Eşya adı girin: ")
+
+            if hesap in stok and esya in stok[hesap]:
+                stok[hesap].remove(esya)
+                print(f"{esya}, {hesap} hesabından çıkarılmıştır.")
+            else:
+                print(f"{esya}, {hesap} hesabında bulunamadı.")
+
+        elif secim == "3":
+            hesap = input("Hesap adı girin: ")
+
+            if hesap in stok:
+                print(f"{hesap} hesabına geçildi.")
+            else:
+                print(f"{hesap} hesabı bulunamadı.")
+
+        elif secim == "4":
+            print("\n--- Stok Durumu ---")
+            for hesap, esyalar in stok.items():
+                if esyalar:
+                    print(f"{hesap} hesabında bulunan eşyalar: {', '.join(esyalar)}")
+                else:
+                    print(f"{hesap} hesabı boştur.")
+
+        elif secim == "5":
+            print("Stok programı kapatılıyor...")
+            verileri_kaydet(stok)
+            break
+
+        else:
+            print("Geçersiz bir seçenek girdiniz. Lütfen tekrar deneyin.")
+
+
+stok_programi()
